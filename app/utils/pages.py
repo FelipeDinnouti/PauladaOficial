@@ -113,10 +113,10 @@ home_page_main_content = Div(
     cls="appearing"
 )
 
-home_page_main_text_file = open("assets/texts/MainPage.md", "r")
+home_page_main_text_file = open("static/texts/MainPage.md", "r")
 home_page_main_text = home_page_main_text_file.read()
 
-rules_main_text_file = open("assets/texts/OfficialRegulamentation.md", "r")
+rules_main_text_file = open("static/texts/OfficialRegulamentation.md", "r")
 rules_main_text = rules_main_text_file.read()
 
 INVALID_EMAIL_ERROR = "E-mail inválido"
