@@ -3,7 +3,28 @@ from fasthtml.common import *
 from routes import home, users
 from utils.redirects import *
 
-import utils.pages as pages
+import json
+import sys
+from functools import wraps
+
+# Before wares
+counter_file = Path("visit_count.json")
+
+def visit_counter(func):
+    @wraps(func)
+    def wrapper(req, *args, **kwargs):
+        if not counter_file.exists():
+            counter_file.write_text(json.dumps({"visits": 0}))
+
+        data = json.loads(counter_file.read_text())
+        data["visits"] += 1
+        counter_file.write_text(json.dumps(data, indent=2))
+
+        print(f"[Counter] Visit #{data['visits']}", file=sys.stdout, flush=True)
+
+        return func(req, *args, **kwargs)
+    return wrapper
+
 
 # Checks if the user is authenticated by checking the session information
 def user_auth_before(request, session):
@@ -37,7 +58,8 @@ hdrs = (
         Link(rel="stylesheet", href="static/css/pico-main/css/pico.css",), 
         Script(src="static/scripts/jquery-3_7_1_min.js"),
         Script(src="static/scripts/visible.js"), 
-        Script(src="static/scripts/title.js"),) 
+        # Script(src="static/scripts/title.js"),
+    ) 
 
 # FastAPI app
 app, rt = fast_app( 
@@ -45,41 +67,42 @@ app, rt = fast_app(
     debug=True,
     before=beforeware,
     hdrs=hdrs,
-    title="Recebill"
+    title="Paulada Oficial"
 )
 
 # Routing: GET
 @rt("/")
-def get():
-    return home.homepage()
+@visit_counter
+def get(session):
+    return home.homepage(session)
 
-@rt("/about")
-def get():
-    return pages.about
+# @rt("/about")
+# def get(session):
+#     return pages.about
 
 @rt("/forum")
-def get():
-    return home.forum()
+def get(session):
+    return home.forum(session)
 
 @rt("/novidades")
-def get():
-    return home.news()
+def get(session):
+    return home.news(session)
 
 @rt("/regras")
-def get():
-    return home.rules()
+def get(session):
+    return home.rules(session)
 
 @rt("/cadastro")
-def get():
-    return users.register_page()
+def get(session):   
+    return users.register_page(session)
 
 @rt("/cadastro")
 def post(name: str, email: str, password: str, gender: str, session): # Variable position must match form input index
     return users.register(name, email, password, gender, session)
 
 @rt("/login")
-def get():
-    return users.login_page()
+def get(session):
+    return users.login_page(session)
 
 @rt("/login")
 def post(email: str, password: str, session):
@@ -94,5 +117,4 @@ def get(session):
 def post(session):
     return users.logout(session)
 
-
-serve(port=5001)
+serve(port=38001)
