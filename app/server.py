@@ -10,26 +10,6 @@ from functools import wraps
 # Before wares
 counter_file = Path("visit_count.json")
 
-def visit_counter(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            if not counter_file.exists():
-                counter_file.write_text(json.dumps({"visits": 0}))
-
-            data = json.loads(counter_file.read_text())
-            data["visits"] += 1
-            counter_file.write_text(json.dumps(data, indent=2))
-
-            print(f"[Counter] Visit #{data['visits']}", file=sys.stdout, flush=True)
-
-            return func(*args, **kwargs)
-        except Exception as e:
-            print(f"Error in visit_counter: {e}", file=sys.stderr)
-            raise  # re-raise after logging
-
-    return wrapper
-
 # Checks if the user is authenticated by checking the session information
 def user_auth_before(request, session):
     auth = request.scope['auth'] = session.get('auth', None)
@@ -75,7 +55,6 @@ app, rt = fast_app(
 
 # Routing: GET
 @rt("/")
-@visit_counter
 def get(session):
     return home.homepage(session)
 
