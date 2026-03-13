@@ -1,5 +1,5 @@
 # app/routes/home.py
-import utils.pages as pages
+import app.utils.pages as pages
 
 # Routing: GET
 def homepage(_session):

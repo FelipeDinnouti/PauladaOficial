@@ -1,7 +1,7 @@
 from fasthtml.common import *
 
-from routes import home, users
-from utils.redirects import *
+from app.routes import home, users
+from app.utils.redirects import *
 
 import json
 import sys

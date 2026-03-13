@@ -1,8 +1,8 @@
 from fasthtml.common import *
-from utils.redirects import *
+from app.utils.redirects import *
 
-import utils.pages as pages
-import db.user as db_users
+import app.utils.pages as pages
+import app.db.user as db_users
 
 MAX_NAME_LENGTH = 254
 MAX_PASSWORD_LENGTH = 32
