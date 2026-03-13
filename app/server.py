@@ -121,3 +121,6 @@ def post(session):
     return users.logout(session)
 
 serve(port=38001)
+
+if __name__ == "__main__":
+    serve(port=38001)
