@@ -244,7 +244,7 @@ register = Div(
 home = Div(
     navigation_header,
     Div(
-        Img(src="assets/icons/logo.png", id="main_page_logo_svg"),
+        Img(src="static/icons/logo.png", id="main_page_logo_svg"),
         H1("PAULADA", id="main_page_logo_text"),
         id="main_page_logo",
     ),

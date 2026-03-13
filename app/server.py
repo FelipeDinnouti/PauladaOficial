@@ -12,17 +12,22 @@ counter_file = Path("visit_count.json")
 
 def visit_counter(func):
     @wraps(func)
-    def wrapper(req, *args, **kwargs):
-        if not counter_file.exists():
-            counter_file.write_text(json.dumps({"visits": 0}))
+    def wrapper(*args, **kwargs):
+        try:
+            if not counter_file.exists():
+                counter_file.write_text(json.dumps({"visits": 0}))
 
-        data = json.loads(counter_file.read_text())
-        data["visits"] += 1
-        counter_file.write_text(json.dumps(data, indent=2))
+            data = json.loads(counter_file.read_text())
+            data["visits"] += 1
+            counter_file.write_text(json.dumps(data, indent=2))
 
-        print(f"[Counter] Visit #{data['visits']}", file=sys.stdout, flush=True)
+            print(f"[Counter] Visit #{data['visits']}", file=sys.stdout, flush=True)
 
-        return func(req, *args, **kwargs)
+            return func(*args, **kwargs)
+        except Exception as e:
+            print(f"Error in visit_counter: {e}", file=sys.stderr)
+            raise  # re-raise after logging
+
     return wrapper
 
 
@@ -33,7 +38,6 @@ def user_auth_before(request, session):
 
 # Pages allowed to visit without login
 whitelisted_pages = ['/login', '/', '/about', '/cadastro', '/regras']
-
 
 # Runs right before changing pages
 beforeware = Beforeware(

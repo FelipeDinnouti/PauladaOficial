@@ -10,10 +10,10 @@ MAX_EMAIL_LENGTH = 254
 
 ## Routing: GET
 
-def register_page():
+def register_page(_session):
     return pages.register
 
-def login_page():
+def login_page(_session):
     return pages.login
 
 def profile_page(session):
