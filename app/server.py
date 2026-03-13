@@ -30,7 +30,6 @@ def visit_counter(func):
 
     return wrapper
 
-
 # Checks if the user is authenticated by checking the session information
 def user_auth_before(request, session):
     auth = request.scope['auth'] = session.get('auth', None)
