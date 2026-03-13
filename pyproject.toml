@@ -1,2 +1,6 @@
+[project]
+name = "paulada-server"
+version = "0.0.1"
+
 [project.scripts]
 app = "app.server:app"
